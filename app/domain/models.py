@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum
 from uuid import UUID, uuid4
 
@@ -63,7 +63,7 @@ class Opportunity(BaseModel):
     required_skills: list[str] = Field(default_factory=list)
     deadline: datetime | None = None
     status: OpportunityStatus = OpportunityStatus.ACTIVE
-    discovered_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    discovered_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     @field_validator("deadline", "discovered_at")
     @classmethod

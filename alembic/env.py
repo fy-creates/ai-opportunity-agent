@@ -1,9 +1,9 @@
 from asyncio import run
 
-from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from alembic import context
 from app.config import get_settings
 from app.db.models import Base
 
@@ -31,6 +31,7 @@ async def run_async_migrations() -> None:
         poolclass=pool.NullPool,
     )
     async with connectable.connect() as connection:
+
         def run_migrations(sync_connection) -> None:
             context.configure(
                 connection=sync_connection,

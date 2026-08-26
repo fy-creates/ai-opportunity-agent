@@ -20,7 +20,9 @@ def canonicalize_url(value: str) -> str:
         raise ValueError("url must be an absolute HTTP(S) URL")
     host = parts.hostname.lower() if parts.hostname else ""
     port = parts.port
-    if port and not ((parts.scheme == "http" and port == 80) or (parts.scheme == "https" and port == 443)):
+    if port and not (
+        (parts.scheme == "http" and port == 80) or (parts.scheme == "https" and port == 443)
+    ):
         host = f"{host}:{port}"
     path = parts.path or "/"
     path = re.sub(r"/{2,}", "/", path)

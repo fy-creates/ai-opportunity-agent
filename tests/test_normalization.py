@@ -10,7 +10,10 @@ def test_normalize_key_is_case_insensitive() -> None:
 
 
 def test_canonicalize_url_removes_fragment_and_default_port() -> None:
-    assert canonicalize_url("HTTPS://Example.COM:443/jobs/123/#apply") == "https://example.com/jobs/123"
+    assert (
+        canonicalize_url("HTTPS://Example.COM:443/jobs/123/#apply")
+        == "https://example.com/jobs/123"
+    )
 
 
 def test_canonicalize_url_rejects_relative_url() -> None:

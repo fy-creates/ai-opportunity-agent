@@ -15,10 +15,18 @@ class MatchingEngine:
         skill_gaps = sorted(required - profile_skills)
 
         target_roles = {role.lower() for role in profile.target_roles}
-        role_fit = any(role in opportunity.title.lower() for role in target_roles) if target_roles else False
+        role_fit = (
+            any(role in opportunity.title.lower() for role in target_roles)
+            if target_roles
+            else False
+        )
 
         location_fit = self._location_fit(profile, opportunity)
-        remote_fit = profile.remote_preference is None or opportunity.remote is None or profile.remote_preference == opportunity.remote
+        remote_fit = (
+            profile.remote_preference is None
+            or opportunity.remote is None
+            or profile.remote_preference == opportunity.remote
+        )
 
         hard_exclusion = False
         exclusions: list[str] = []

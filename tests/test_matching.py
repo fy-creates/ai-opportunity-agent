@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from app.domain.matching import MatchingEngine
 from app.domain.models import Opportunity, OpportunityType, UserProfile
@@ -15,14 +15,16 @@ def make_opportunity(**overrides) -> Opportunity:
         "location": "Lagos, Nigeria",
         "remote": True,
         "required_skills": ["react", "javascript", "typescript"],
-        "deadline": datetime(2026, 9, 1, tzinfo=timezone.utc),
+        "deadline": datetime(2026, 9, 1, tzinfo=UTC),
     }
     values.update(overrides)
     return Opportunity(**values)
 
 
 def test_match_explains_skill_hits_and_gaps() -> None:
-    profile = UserProfile(skills=["React", "JavaScript"], target_roles=["Frontend"], preferred_locations=["Lagos"])
+    profile = UserProfile(
+        skills=["React", "JavaScript"], target_roles=["Frontend"], preferred_locations=["Lagos"]
+    )
     result = MatchingEngine().evaluate(profile, make_opportunity())
 
     assert result.score > 50

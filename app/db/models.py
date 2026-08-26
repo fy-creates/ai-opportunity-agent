@@ -2,7 +2,8 @@ from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, DateTime, Integer, String, Text, UniqueConstraint
-from sqlalchemy.dialects.postgresql import ARRAY, UUID as PGUUID
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -24,7 +25,9 @@ class UserProfileRow(Base):
 
 class OpportunityRow(Base):
     __tablename__ = "opportunities"
-    __table_args__ = (UniqueConstraint("source", "fingerprint", name="uq_opportunity_source_fingerprint"),)
+    __table_args__ = (
+        UniqueConstraint("source", "fingerprint", name="uq_opportunity_source_fingerprint"),
+    )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     title: Mapped[str] = mapped_column(String(500))
