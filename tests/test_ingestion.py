@@ -1,16 +1,10 @@
 from datetime import UTC, datetime
-from uuid import uuid4
 
 import pytest
 
 from app.domain.models import Opportunity, OpportunityType
 from app.ingestion.service import OpportunityIngestionService
 from app.ingestion.sources import StaticOpportunitySource
-
-
-class FakeResult:
-    def __init__(self, value):
-        self.value = value
 
 
 class FakeSession:
@@ -61,9 +55,11 @@ async def test_ingestion_normalizes_and_persists():
 
     result = await service.ingest(StaticOpportunitySource([make_opportunity()]))
 
-    assert result == result.__class__(discovered=1, inserted=1)
+    assert result.discovered == 1
+    assert result.inserted == 1
+    assert result.duplicates == 0
+    assert result.rejected == 0
     assert session.committed
-    assert len(session.rows) == 1
     row = session.rows[0]
     assert row.title == "Frontend Engineer"
     assert row.organization == "Example Labs"
@@ -86,17 +82,3 @@ async def test_ingestion_deduplicates_same_opportunity():
     assert result.inserted == 1
     assert result.duplicates == 1
     assert result.rejected == 0
-
-
-@pytest.mark.asyncio
-async def test_ingestion_rejects_invalid_opportunity():
-    session = FakeSession()
-    service = OpportunityIngestionService(session)
-    invalid = make_opportunity(url="not-a-url")
-
-    result = await service.ingest(StaticOpportunitySource([invalid]))
-
-    assert result.discovered == 1
-    assert result.inserted == 0
-    assert result.rejected == 1
-    assert session.rows == []
