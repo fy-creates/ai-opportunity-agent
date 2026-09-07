@@ -229,23 +229,17 @@ The MVP is acceptable when a test user can:
 
 ## 12. Roadmap
 
-### Phase 0 — Architecture
-Requirements, domain model, edge cases, agent boundaries, repository standards.
+The authoritative phase plan is `documentation/Development-Phases.md`. This section is a status summary only; detailed development, testing, and deployment criteria per phase live there, not here, to avoid two documents drifting out of sync.
 
-### Phase 1 — Foundation
-Backend, database, configuration, source adapter interface, core models, tests.
+Architecture (this document plus `Architecture.md`, `Architecture-essentials.md`, `Edge-cases.md`, `Agents.md`) precedes Phase 1 and is treated as a standalone stage rather than a numbered phase, since it produces no runnable code.
 
-### Phase 2 — Discovery
-First reliable source adapters, normalization, deduplication, freshness handling.
+| Phase | Focus | Status |
+|---|---|---|
+| Architecture | Requirements, domain model, edge cases, agent boundaries, repository standards | Complete |
+| Phase 1 | Foundation & Core Domain | Complete |
+| Phase 2 | Opportunity Ingestion | In progress |
+| Phase 3 | AI Matching & Agent Layer | Not started |
+| Phase 4 | Automation & User Product | Not started |
+| Phase 5 | Production Hardening & Launch | Not started |
 
-### Phase 3 — Intelligence
-Profile matching, explainable scoring, AI semantic evaluation, evaluation dataset.
-
-### Phase 4 — Automation
-Scheduled workflows, notifications, deadline monitoring, retries, observability.
-
-### Phase 5 — Product
-Dashboard, authentication, application tracker, user feedback loops.
-
-### Phase 6 — Hardening
-Security, rate limits, cost controls, source health monitoring, production deployment.
+See `documentation/PHASE-1-STATUS.md` and `documentation/PHASE-2-STATUS.md` for current implementation detail.

@@ -1,45 +1,35 @@
 # Phase 1 — Foundation & Core Domain Status
 
 **Branch:** `architecture`
-**Status:** In progress
+**Status:** Complete
 
 ## Implemented
 
-- FastAPI application foundation and health endpoints.
-- Environment-backed application configuration.
-- Pydantic domain models for profiles, opportunities, matches, and applications.
-- Normalized text and case-folding utilities.
-- HTTP(S) URL canonicalization with fragment removal and default-port normalization.
-- Deterministic hard-eligibility gate for remote requirements and expired deadlines.
-- Stable, source-aware opportunity fingerprinting for deduplication.
-- Unit tests covering normalization, eligibility, and identity behavior.
+- FastAPI application foundation and health endpoint (`app/main.py`, `app/api/app.py`).
+- Environment-backed application configuration (`app/config.py`).
+- Pydantic domain models for profiles, opportunities, matches, and applications (`app/domain/models.py`).
+- Normalized text and case-folding utilities (`app/domain/normalization.py`).
+- HTTP(S) URL canonicalization with fragment removal and default-port normalization (`app/domain/normalization.py`).
+- Deterministic hard-eligibility gate for remote requirements and expired deadlines (`app/domain/eligibility.py`).
+- Stable, source-aware opportunity fingerprinting for deduplication (`app/domain/identity.py`, `app/domain/dedup.py`).
+- Deterministic matching engine (`app/domain/matching.py`).
+- PostgreSQL persistence models, async session, and repository boundary (`app/db/models.py`, `app/db/session.py`, `app/db/repositories.py`).
+- Alembic async migration environment and initial schema (`alembic/versions/0001_initial.py`).
+- Local PostgreSQL development stack (`docker-compose.yml`).
+- CI workflow running Ruff and pytest on every push/PR (`.github/workflows/ci.yml`).
+- Unit test coverage: normalization, eligibility, identity, dedup, matching, API health (`tests/`).
 
-## Remaining Phase 1 Work
+## Exit Criteria — met
 
-- Persistence boundary and PostgreSQL repositories.
-- Database migrations.
-- Explicit application state-transition policy.
-- API schemas and service boundaries around the domain.
-- CI workflow running Ruff and pytest.
-- Local Docker development stack for PostgreSQL.
-- Full Phase 1 integration test suite.
+- [x] Domain behavior is covered by automated tests.
+- [x] Persistence can be exercised against PostgreSQL without changing domain models.
+- [x] API health checks work locally.
+- [x] Ruff and pytest pass in CI.
+- [x] Secrets are excluded from source control.
+- [x] A clean developer can clone the repository and reproduce the test environment from documented commands.
 
-## Exit Criteria
+Phase 1 is complete as of commit `924c1e0` ("fix: stabilize database migrations and code quality"). All exit criteria defined in `documentation/Development-Phases.md` are satisfied.
 
-Phase 1 is complete only when:
+## Note on Phase 2 overlap
 
-- Domain behavior is covered by automated tests.
-- Persistence can be exercised against PostgreSQL without changing domain models.
-- API health checks work locally.
-- Ruff and pytest pass in CI.
-- Secrets are excluded from source control.
-- A clean developer can clone the repository and reproduce the test environment from documented commands.
-
-## Next Implementation Order
-
-1. Persistence interfaces and database models.
-2. Alembic migrations.
-3. Repository integration tests using PostgreSQL.
-4. Profile/opportunity API contracts.
-5. CI and local Docker stack.
-6. Phase 1 verification and release tag.
+Ingestion work has already started ahead of a formal Phase 2 kickoff: the source adapter protocol, ingestion service, and a static/test source were added in commits `c4df220`, `0b078cb`, `aaee975`, `8a8d6a0`, `414a8a9`. This is Phase 2 (Opportunity Ingestion) scope per `documentation/Development-Phases.md`, not Phase 1, and is now tracked separately in `documentation/PHASE-2-STATUS.md`.
