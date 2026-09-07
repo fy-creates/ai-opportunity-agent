@@ -14,7 +14,12 @@ class FakeSession:
         self.committed = False
 
     async def scalar(self, statement):
-        fingerprint = statement.whereclause.right.value
+        where_clause = statement.whereclause
+        clauses = getattr(where_clause, "clauses", [where_clause])
+        fingerprint = None
+        for clause in clauses:
+            if getattr(clause.left, "name", None) == "fingerprint":
+                fingerprint = clause.right.value
         for row in self.rows:
             if row.fingerprint == fingerprint:
                 return row.id

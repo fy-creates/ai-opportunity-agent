@@ -2,7 +2,25 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+_TRACKING_PARAMS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "utm_id",
+    "utm_name",
+    "gclid",
+    "fbclid",
+    "msclkid",
+    "mc_cid",
+    "mc_eid",
+    "igshid",
+    "ref",
+    "ref_src",
+}
 
 
 def normalize_text(value: str) -> str:
@@ -28,4 +46,10 @@ def canonicalize_url(value: str) -> str:
     path = re.sub(r"/{2,}", "/", path)
     if path != "/":
         path = path.rstrip("/")
-    return urlunsplit((parts.scheme.lower(), host, path, parts.query, ""))
+    query_pairs = [
+        (key, val)
+        for key, val in parse_qsl(parts.query, keep_blank_values=True)
+        if key.lower() not in _TRACKING_PARAMS
+    ]
+    query = urlencode(query_pairs)
+    return urlunsplit((parts.scheme.lower(), host, path, query, ""))

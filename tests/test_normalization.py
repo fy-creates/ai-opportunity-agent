@@ -16,6 +16,15 @@ def test_canonicalize_url_removes_fragment_and_default_port() -> None:
     )
 
 
+def test_canonicalize_url_strips_tracking_params_but_keeps_meaningful_ones() -> None:
+    assert (
+        canonicalize_url(
+            "https://example.com/jobs/123?utm_source=test&utm_medium=email&page=2"
+        )
+        == "https://example.com/jobs/123?page=2"
+    )
+
+
 def test_canonicalize_url_rejects_relative_url() -> None:
     try:
         canonicalize_url("/jobs/123")
