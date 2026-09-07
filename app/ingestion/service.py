@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import OpportunityRow
-from app.domain.dedup import opportunity_fingerprint
+from app.domain.identity import opportunity_fingerprint
 from app.domain.models import Opportunity
 from app.domain.normalization import canonicalize_url, normalize_text
 from app.ingestion.sources import OpportunitySource
@@ -32,17 +32,11 @@ class OpportunityIngestionService:
                 rejected=result.rejected,
             )
             try:
-                normalized = self._normalize(opportunity)
-                fingerprint = opportunity_fingerprint(
-                    source=source.name,
-                    source_id=normalized.source_id,
-                    title=normalized.title,
-                    organization=normalized.organization,
-                    url=str(normalized.url),
-                )
+                normalized = self._normalize(opportunity, source.name)
+                fingerprint = opportunity_fingerprint(normalized)
                 exists = await self.session.scalar(
                     select(OpportunityRow.id).where(
-                        OpportunityRow.source == source.name,
+                        OpportunityRow.source == normalized.source,
                         OpportunityRow.fingerprint == fingerprint,
                     )
                 )
@@ -62,7 +56,7 @@ class OpportunityIngestionService:
                         organization=normalized.organization,
                         opportunity_type=normalized.opportunity_type.value,
                         description=normalized.description,
-                        source=source.name,
+                        source=normalized.source,
                         source_id=normalized.source_id,
                         url=str(normalized.url),
                         location=normalized.location,
@@ -93,9 +87,10 @@ class OpportunityIngestionService:
         return result
 
     @staticmethod
-    def _normalize(opportunity: Opportunity) -> Opportunity:
+    def _normalize(opportunity: Opportunity, source_name: str) -> Opportunity:
         return opportunity.model_copy(
             update={
+                "source": source_name,
                 "title": normalize_text(opportunity.title),
                 "organization": normalize_text(opportunity.organization),
                 "description": normalize_text(opportunity.description),

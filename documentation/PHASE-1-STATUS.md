@@ -11,7 +11,7 @@
 - Normalized text and case-folding utilities (`app/domain/normalization.py`).
 - HTTP(S) URL canonicalization with fragment removal and default-port normalization (`app/domain/normalization.py`).
 - Deterministic hard-eligibility gate for remote requirements and expired deadlines (`app/domain/eligibility.py`).
-- Stable, source-aware opportunity fingerprinting for deduplication (`app/domain/identity.py`, `app/domain/dedup.py`).
+- Stable, source-aware opportunity fingerprinting for deduplication (`app/domain/identity.py`).
 - Deterministic matching engine (`app/domain/matching.py`).
 - PostgreSQL persistence models, async session, and repository boundary (`app/db/models.py`, `app/db/session.py`, `app/db/repositories.py`).
 - Alembic async migration environment and initial schema (`alembic/versions/0001_initial.py`).
